@@ -1,0 +1,94 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id             Int       @id @default(autoincrement())
+    name           String
+    email          String    @unique
+    password       String
+    phone          String?
+    role           Role
+    listings       Listing[]
+    bookings       Booking[]
+    reviews        Review[]
+    resetOTP       String?
+    resetOTPExpire DateTime?
+    createdAt      DateTime  @default(now())
+}
+
+enum Role {
+    ADMIN
+    STUDENT
+    ALUMNI
+}
+
+model Listing {
+    id              Int       @id @default(autoincrement())
+    title           String
+    description     String
+    singleOccupancy Float
+    doubleOccupancy Float
+    userId          Int
+    type            RoomType  @default(AC)
+    user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    bookings        Booking[]
+    images          Image[]
+    reviews         Review[]
+    createdAt       DateTime  @default(now())
+}
+
+enum RoomType {
+    AC
+    NonAC
+    Both
+}
+
+model Booking {
+    id             Int         @id @default(autoincrement())
+    listingId      Int
+    userId         Int
+    startDate      DateTime
+    endDate        DateTime
+    notified       Boolean     @default(false)
+    type           bookingType
+    numberOfGuests Int
+    purpose        purposeType
+    createdAt      DateTime    @default(now())
+    total          Float
+    listing        Listing     @relation(fields: [listingId], references: [id], onDelete: Cascade)
+    user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum purposeType {
+    Personal
+    Campus_Recruitment
+}
+
+enum bookingType {
+    AC
+    NonAC
+}
+
+model Image {
+    id        Int     @id @default(autoincrement())
+    url       String
+    listingId Int
+    listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+    id        Int      @id @default(autoincrement())
+    content   String
+    rating    Int
+    listingId Int
+    userId    Int
+    listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+}
