@@ -7,8 +7,8 @@ import bookingRouter from "./router/bookings.route";
 import reviewRouter from "./router/review.route";
 import { sendStayCompletionEmails } from "./controllers/booking.controller";
 //config
-dotenv.config();
 const app = express();
+dotenv.config();
 
 //cors
 const corsOptions = {

@@ -41,7 +41,7 @@ jobs:
           script: |
             cd /var/www/Kanchenjunga-Backend
             git pull origin main
-            npm install
-            npm run build
+            pnpm install
+            pnpm run build
             pm2 restart kanchenjunga-backend || pm2 start dist/index.js --name "kanchenjunga-backend"
             pm2 save
