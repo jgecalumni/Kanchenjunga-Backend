@@ -22,7 +22,7 @@ app.use("/public/rooms", express.static("public/rooms"));
 
 //test route
 app.get("/", (req: Request, res: Response) => {
-	res.send("Hello World!");
+	res.send("Hello World!~");
 });
 
 //routes
