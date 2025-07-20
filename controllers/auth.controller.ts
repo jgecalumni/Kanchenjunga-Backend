@@ -94,10 +94,10 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 		);
 		res.cookie("token", token, {
 			expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-			// httpOnly: false,
-			// secure: false,
-			// sameSite: "none",
-			// domain: "localhost",
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			domain: "kanchenjunga.jgecalumni.in",
 		});
 		res.status(200).json({
 			success: true,
