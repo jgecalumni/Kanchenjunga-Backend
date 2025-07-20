@@ -12,7 +12,10 @@ dotenv.config();
 
 //cors
 const corsOptions = {
-	origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+	origin: [
+		process.env.CORS_ORIGIN as string,
+		process.env.CORS_ORIGIN_DEV as string,
+	],
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 	credentials: true,
 };
