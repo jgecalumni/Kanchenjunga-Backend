@@ -93,6 +93,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 			{ expiresIn: "1d" }
 		);
 		res.cookie("token", token, {
+			expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
