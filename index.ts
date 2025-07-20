@@ -16,6 +16,7 @@ const corsOptions = {
 	origin: [
 		process.env.CORS_ORIGIN as string,
 		process.env.CORS_ORIGIN_DEV as string,
+		process.env.CORS_ORIGIN_ADMIN as string,
 	],
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 	credentials: true,
