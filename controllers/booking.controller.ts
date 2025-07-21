@@ -13,7 +13,10 @@ export const createPayment = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { listingId, startDate, endDate, total } = req.body;
 		const start = new Date(startDate);
+		start.setHours(8, 0, 0, 0); // 8:00 AM check-in
+
 		const end = new Date(endDate);
+		start.setHours(9, 0, 0, 0); // 9:00 AM check-in
 
 		// Check availability
 		const existingBookings = await prisma.booking.findMany({
@@ -177,7 +180,6 @@ export const createBooking = asyncHandler(
 	}
 );
 
-
 export const checkbooking = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { id } = req.params;
@@ -191,7 +193,11 @@ export const checkbooking = asyncHandler(
 			return;
 		}
 		const start = new Date(startDate);
+		start.setHours(8, 0, 0, 0);
+
 		const end = new Date(endDate);
+		start.setHours(9, 0, 0, 0);
+
 		try {
 			const isAvailable = await prisma.booking.findMany({
 				where: {
