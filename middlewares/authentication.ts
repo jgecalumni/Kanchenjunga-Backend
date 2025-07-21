@@ -11,7 +11,7 @@ export const authentication = asyncHandler(
 			if (match) {
 				token = match[1];
 			}
-		}		
+		}
 		try {
 			if (!token) {
 				res
@@ -47,7 +47,10 @@ export const authentication = asyncHandler(
 //check for admin
 export const isAdmin = asyncHandler(
 	(req: Request, res: Response, next: NextFunction) => {
-		if ((req as any).user.email !== process.env.ADMIN_EMAIL) {
+		if (
+			(req as any).user.email !== process.env.ADMIN_EMAIL &&
+			(req as any).user.role !== "ADMIN"
+		) {
 			res
 				.status(403)
 				.json({ error: true, success: false, message: "Access denied" });
