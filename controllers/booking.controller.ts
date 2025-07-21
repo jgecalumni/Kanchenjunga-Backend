@@ -62,7 +62,6 @@ export const createBooking = asyncHandler(
 			receiptId,
 			createdAt,
 		} = req.body;
-		
 
 		const { id } = req.params;
 
@@ -100,8 +99,12 @@ export const createBooking = asyncHandler(
 			return;
 		}
 
+		// Set check-in time to 8 AM and check-out time to 9 AM
 		const start = new Date(startDate);
+		start.setHours(8, 0, 0, 0); // 8:00 AM check-in
+
 		const end = new Date(endDate);
+		end.setHours(9, 0, 0, 0); // 9:00 AM check-out
 
 		// Check room availability again
 		const isAvailable = await prisma.booking.findMany({
@@ -140,6 +143,7 @@ export const createBooking = asyncHandler(
 			where: { id: Number(id) },
 			select: { title: true },
 		});
+
 		const pdfDetails = {
 			name: (req as any).user.name,
 			receiptId,
@@ -147,7 +151,7 @@ export const createBooking = asyncHandler(
 			date: createdAt,
 			status: "Paid",
 			amount: total,
-		};		
+		};
 
 		// Send confirmation email
 		await sendMailWithAttachment(
@@ -157,8 +161,8 @@ export const createBooking = asyncHandler(
 				(req as any).user.name,
 				getRoom?.title ?? "",
 				type,
-				format(startDate, "dd MMM, yyyy"),
-				format(endDate, "dd MMM, yyyy"),
+				format(start, "dd MMM, yyyy 'at' hh:mm a"),
+				format(end, "dd MMM, yyyy 'at' hh:mm a"),
 				total,
 				booking.id.toString()
 			),
@@ -172,6 +176,7 @@ export const createBooking = asyncHandler(
 		});
 	}
 );
+
 
 export const checkbooking = asyncHandler(
 	async (req: Request, res: Response) => {
