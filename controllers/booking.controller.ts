@@ -13,10 +13,8 @@ export const createPayment = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { listingId, startDate, endDate, total } = req.body;
 		const start = new Date(startDate);
-		start.setHours(8, 0, 0, 0); // 8:00 AM check-in
 
 		const end = new Date(endDate);
-		start.setHours(9, 0, 0, 0); // 9:00 AM check-in
 
 		// Check availability
 		const existingBookings = await prisma.booking.findMany({
@@ -104,10 +102,8 @@ export const createBooking = asyncHandler(
 
 		// Set check-in time to 8 AM and check-out time to 9 AM
 		const start = new Date(startDate);
-		start.setHours(8, 0, 0, 0); // 8:00 AM check-in
 
 		const end = new Date(endDate);
-		end.setHours(9, 0, 0, 0); // 9:00 AM check-out
 
 		// Check room availability again
 		const isAvailable = await prisma.booking.findMany({
@@ -148,10 +144,13 @@ export const createBooking = asyncHandler(
 		});
 
 		const pdfDetails = {
+			roomName: getRoom?.title,
 			name: (req as any).user.name,
 			receiptId,
 			razorpay_order_id,
 			date: createdAt,
+			startDate: format(start, "dd MMM, yyyy 'at' hh:mm a"),
+			endDate: format(end, "dd MMM, yyyy 'at' hh:mm a"),
 			status: "Paid",
 			amount: total,
 		};
@@ -193,10 +192,7 @@ export const checkbooking = asyncHandler(
 			return;
 		}
 		const start = new Date(startDate);
-		start.setHours(8, 0, 0, 0);
-
 		const end = new Date(endDate);
-		start.setHours(9, 0, 0, 0);
 
 		try {
 			const isAvailable = await prisma.booking.findMany({

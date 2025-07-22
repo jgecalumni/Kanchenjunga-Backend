@@ -48,9 +48,18 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 
 		doc.image("public/Logo.png", 40, 40, { width: 500 });
 		doc.moveDown(10);
-
+		doc
+			.font("Helvetica-Oblique") // Built-in italic font in pdfkit
+			.fontSize(12)
+			.fillColor("#374151")
+			.text(
+				`"Thank you for choosing ${receipt.roomName} in Kanchenjunga convention centre."`,
+				50,
+				currentY
+			);
+		currentY += 35;
 		// Add receipt title (moved down to account for image)
-		doc.fontSize(18).fillColor("#111827").text("PAYMENT RECEIPT", 50, currentY);
+		doc.fontSize(18).font('Helvetica').fillColor("#111827").text("PAYMENT RECEIPT", 50, currentY);
 		currentY += 30;
 
 		// Add horizontal line
@@ -91,7 +100,7 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 			}
 		);
 
-		currentY += 40;
+		currentY += 30;
 
 		doc
 			.fontSize(14)
@@ -107,8 +116,21 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 		currentY += 20;
 		doc.text(`Payment Date: ${paymentDate}`, 50, currentY);
 
+		currentY += 30;
+
+		doc
+			.fontSize(14)
+			.fillColor("#374151")
+			.text("Reservation Details:", 50, currentY);
+
 		currentY += 20;
-		doc.text(`Status: ${receipt.status}`, 50, currentY);
+		doc
+			.fontSize(12)
+			.fillColor("#6b7280")
+			.text(`Check-In: ${receipt.startDate}`, 50, currentY);
+
+		currentY += 20;
+		doc.text(`Check-Out: ${receipt.endDate}`, 50, currentY);
 
 		currentY += 40;
 
@@ -164,7 +186,7 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 			.text(`\u20B9${amountDue.toLocaleString("en-IN")}`, 450, tableY + 60);
 
 		// Update currentY to after the table
-		currentY = tableY + 75;
+		currentY = tableY + 50;
 
 		// Payment status badge
 		if (receipt.status === "Paid") {
@@ -184,33 +206,23 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 		}
 
 		// Add more space before footer
-		currentY += 40;
+		currentY += 15;
 
-		// Footer - now using dynamic positioning
 		doc
 			.fontSize(10)
-			.fillColor("#9ca3af")
+			.fillColor("#000000")
 			.text(
-				"This is a computer-generated receipt and does not require a signature.",
+				"This is a computer-generated receipt and does not require a signature. For any query pls contact our supporting staff Papai: +91 7001096910",
 				50,
 				currentY
 			);
+		currentY += 30;
 
-		currentY += 15;
-		doc.text("For any queries, please contact our support team.", 50, currentY);
-
-		currentY += 15;
 		doc.text(
 			`Generated on: ${new Date().toLocaleDateString("en-IN")}`,
 			50,
 			currentY
 		);
-
-		// Add company branding at bottom
-		doc
-			.fontSize(8)
-			.fillColor("#d1d5db")
-			.text("Powered by JGEC Alumni", 450, currentY);
 
 		// Finalize the PDF
 		doc.end();
