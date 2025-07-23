@@ -440,8 +440,8 @@ export const sendStayCompletionEmails = () => {
 					booking.user.name,
 					booking.listing.title,
 					booking.type,
-					format(booking.startDate, "dd MMM, yyyy"),
-					format(booking.endDate, "dd MMM, yyyy"),
+					format(booking.startDate, "dd MMM, yyyy 'at' hh:mm a"),
+					format(booking.endDate, "dd MMM, yyyy 'at' hh:mm a"),
 					booking.id,
 					booking.total,
 					process.env.BASE_URL || "http://localhost:3000"

@@ -49,17 +49,22 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 		doc.image("public/Logo.png", 40, 40, { width: 500 });
 		doc.moveDown(10);
 		doc
-			.font("Helvetica-Oblique") // Built-in italic font in pdfkit
+			.font("Helvetica-Oblique") // Italic for initial part
 			.fontSize(12)
 			.fillColor("#374151")
-			.text(
-				`"Thank you for choosing ${receipt.roomName} in Kanchenjunga convention centre."`,
-				50,
-				currentY
-			);
+			.text("Thank you for choosing ", 50, currentY, { continued: true })
+			.font("Helvetica-BoldOblique") // Bold + Italic for roomName
+			.text(receipt.roomName, { continued: true })
+			.font("Helvetica-Oblique") // Revert back to italic
+			.text(" in Kanchenjunga convention centre.");
+
 		currentY += 35;
 		// Add receipt title (moved down to account for image)
-		doc.fontSize(18).font('Helvetica').fillColor("#111827").text("PAYMENT RECEIPT", 50, currentY);
+		doc
+			.fontSize(18)
+			.font("Helvetica")
+			.fillColor("#111827")
+			.text("PAYMENT RECEIPT", 50, currentY);
 		currentY += 30;
 
 		// Add horizontal line
@@ -76,7 +81,7 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 		doc
 			.fontSize(14)
 			.fillColor("#374151")
-			.text("Customer Details:", 50, currentY);
+			.text("Alumni/Student Details:", 50, currentY);
 
 		currentY += 20;
 		doc
@@ -186,9 +191,11 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 			.text(`\u20B9${amountDue.toLocaleString("en-IN")}`, 450, tableY + 60);
 
 		// Update currentY to after the table
-		currentY = tableY + 50;
+		currentY = tableY + 65;
 
 		// Payment status badge
+		doc.fontSize(12).fillColor("#374151").text("Status:", 50, currentY);
+		currentY += 8;
 		if (receipt.status === "Paid") {
 			doc
 				.rect(50, currentY + 10, 100, 25)
