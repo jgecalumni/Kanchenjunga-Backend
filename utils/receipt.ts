@@ -220,7 +220,7 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 			currentY = 692; // Pull back to avoid auto page break
 		}
 		doc.fontSize(10).fillColor("#000000").text(
-			"This is a computer-generated receipt and does not require a signature. For any query please contact our beloved brother Papai: +91 7001096910",
+			"This is a computer-generated receipt and does not require a signature. For Food & other things please contact our beloved brother Papai: +91 7001096910",
 			50,
 			currentY,
 			{ width: 500 } // restrict width so text wraps instead of overflowing
