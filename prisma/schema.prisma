@@ -57,7 +57,7 @@ model Booking {
     endDate        DateTime
     notified       Boolean     @default(false)
     type           bookingType
-    numberOfGuests Int
+    numberOfGuests String
     purpose        purposeType
     createdAt      DateTime    @default(now())
     total          Float

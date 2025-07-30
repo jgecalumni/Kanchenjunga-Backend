@@ -151,6 +151,7 @@ export const createBooking = asyncHandler(
 			date: createdAt,
 			startDate: format(start, "dd MMM, yyyy 'at' hh:mm a"),
 			endDate: format(end, "dd MMM, yyyy 'at' hh:mm a"),
+			numberOfGuests: guests,
 			status: "Paid",
 			amount: total,
 		};

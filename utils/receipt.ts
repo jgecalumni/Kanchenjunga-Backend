@@ -52,19 +52,19 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 			.font("Helvetica-Oblique") // Italic for initial part
 			.fontSize(12)
 			.fillColor("#374151")
-			.text("Thank you for choosing ", 50, currentY, { continued: true })
+			.text("Thank you for choosing ", 120, currentY, { continued: true })
 			.font("Helvetica-BoldOblique") // Bold + Italic for roomName
 			.text(receipt.roomName, { continued: true })
 			.font("Helvetica-Oblique") // Revert back to italic
 			.text(" in Kanchenjunga convention centre.");
 
-		currentY += 35;
+		currentY += 30;
 		// Add receipt title (moved down to account for image)
 		doc
 			.fontSize(18)
 			.font("Helvetica")
 			.fillColor("#111827")
-			.text("PAYMENT RECEIPT", 50, currentY);
+			.text("PAYMENT RECEIPT", 210, currentY);
 		currentY += 30;
 
 		// Add horizontal line
@@ -81,13 +81,13 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 		doc
 			.fontSize(14)
 			.fillColor("#374151")
-			.text("Alumni/Student Details:", 50, currentY);
+			.text("Alumni/ Student Details:", 50, currentY);
 
 		currentY += 20;
 		doc
 			.fontSize(12)
 			.fillColor("#6b7280")
-			.text(`Name: ${receipt.name}`, 50, currentY);
+			.text(`Name: ${receipt.name} (${receipt.numberOfGuests})`, 50, currentY);
 
 		currentY += 20;
 		doc.text(`Receipt ID: ${receipt.receiptId}`, 50, currentY);
@@ -129,6 +129,7 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 			.text("Reservation Details:", 50, currentY);
 
 		currentY += 20;
+		
 		doc
 			.fontSize(12)
 			.fillColor("#6b7280")
@@ -215,22 +216,23 @@ export const generateReceipt = async (receipt: any): Promise<Buffer> => {
 		// Add more space before footer
 		currentY += 15;
 
-		doc
-			.fontSize(10)
-			.fillColor("#000000")
-			.text(
-				"This is a computer-generated receipt and does not require a signature. For any query pls contact our supporting staff Papai: +91 7001096910",
-				50,
-				currentY
-			);
-		currentY += 30;
+		if (currentY > 700) {
+			currentY = 692; // Pull back to avoid auto page break
+		}
+		doc.fontSize(10).fillColor("#000000").text(
+			"This is a computer-generated receipt and does not require a signature. For any query please contact our beloved brother Papai: +91 7001096910",
+			50,
+			currentY,
+			{ width: 500 } // restrict width so text wraps instead of overflowing
+		);
+
+		currentY += 35;
 
 		doc.text(
 			`Generated on: ${new Date().toLocaleDateString("en-IN")}`,
 			50,
 			currentY
 		);
-
 		// Finalize the PDF
 		doc.end();
 	});
