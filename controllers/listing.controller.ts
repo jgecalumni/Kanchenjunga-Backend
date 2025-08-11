@@ -256,6 +256,7 @@ export const deleteImage = asyncHandler(async (req: Request, res: Response) => {
 export const getListingbyId = asyncHandler(
 	async (req: Request, res: Response) => {
 		try {
+			
 			const data = await prisma.listing.findUnique({
 				where: {
 					id: Number(req.params.id),

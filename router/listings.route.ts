@@ -25,6 +25,6 @@ router
 	.post(authentication, isAdmin, upload.array("images", 4), createImage);
 router.route("/delete/image/:id").delete(authentication, isAdmin, deleteImage);
 
-router.route("/:id").get(authentication, getListingbyId);
+router.route("/:id").get( authentication,getListingbyId);
 
 export default router;

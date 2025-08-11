@@ -40,7 +40,7 @@ app.use("/v1/api/counts", countRouter);
 sendStayCompletionEmails();
 
 //server start
-const PORT = process.env.PORT || 5001;
+const PORT = Number(process.env.PORT) || 5001;
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
 });

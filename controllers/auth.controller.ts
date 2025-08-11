@@ -56,6 +56,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
 	try {
 		const { email, password } = req.body;
+		console.log(req.body);
+		
 		if (!email || !password) {
 			res.status(400).json({
 				error: true,

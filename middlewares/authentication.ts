@@ -1,48 +1,33 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { asyncHandler } from "../utils/asyncHandler";
-export const authentication = asyncHandler(
-	(req: Request, res: Response, next: NextFunction) => {
-		const cookie = req.headers?.cookie;
-		let token: string | undefined;
+export const authentication = asyncHandler((req, res, next) => {
+    let token: string | undefined;
 
-		if (cookie) {
-			const match = cookie.match(/token=([^;]+)/);
-			if (match) {
-				token = match[1];
-			}
-		}
-		try {
-			if (!token) {
-				res
-					.status(404)
-					.json({ error: true, success: false, message: "No token provided" });
-				res.clearCookie("token");
-				return;
-			}
-			const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-			if (!decoded) {
-				res.status(401).json({
-					error: true,
-					success: false,
-					message: "Invalid token",
-				});
-				res.clearCookie("token");
-				return;
-			}
+    // Mobile app → Authorization header
+    if (req.headers.authorization?.startsWith("Bearer ")) {
+        token = req.headers.authorization.split(" ")[1];
+    }
 
-			(req as any).user = decoded;
-		} catch (error) {
-			res.status(401).json({
-				error: true,
-				success: false,
-				message: "Invalid or expired token",
-			});
-			return;
-		}
-		next();
-	}
-);
+    // Web app → Cookie
+    if (!token && req.headers?.cookie) {
+        const match = req.headers.cookie.match(/token=([^;]+)/);
+        if (match) token = match[1];
+    }
+
+    if (!token) {
+        return res.status(404).json({ error: true, success: false, message: "No token provided" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+        (req as any).user = decoded;
+        next();
+    } catch {
+        res.status(401).json({ error: true, success: false, message: "Invalid or expired token" });
+    }
+});
+
 
 //check for admin
 export const isAdmin = asyncHandler(

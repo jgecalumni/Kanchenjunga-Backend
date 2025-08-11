@@ -5,7 +5,8 @@ import prisma from "../prisma";
 export const createReview = asyncHandler(
 	async (req: Request, res: Response) => {
 		try {
-			const { content, rating } = req.body;						
+			const { content, rating } = req.body;
+									
 			await prisma.review.create({
 				data: {
 					listingId: Number(req.params.id),
