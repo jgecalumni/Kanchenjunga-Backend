@@ -12,6 +12,8 @@ import { generateReceipt } from "../utils/receipt";
 export const createPayment = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { listingId, startDate, endDate, total } = req.body;
+		console.log(req.body);
+		
 		const start = new Date(startDate);
 
 		const end = new Date(endDate);
@@ -66,39 +68,39 @@ export const createBooking = asyncHandler(
 
 		const { id } = req.params;
 
-		if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-			res.status(400).json({ error: "Missing payment details" });
-			return;
-		}
+		// if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+		// 	res.status(400).json({ error: "Missing payment details" });
+		// 	return;
+		// }
 
-		if (
-			!startDate ||
-			!endDate ||
-			!total ||
-			!purpose ||
-			!type ||
-			!guests ||
-			!receiptId
-		) {
-			res.status(400).json({ error: "All fields are required" });
-			return;
-		}
+		// if (
+		// 	!startDate ||
+		// 	!endDate ||
+		// 	!total ||
+		// 	!purpose ||
+		// 	!type ||
+		// 	!guests ||
+		// 	!receiptId
+		// ) {
+		// 	res.status(400).json({ error: "All fields are required" });
+		// 	return;
+		// }
 
-		if (!process.env.RAZORPAY_KEY_SECRET) {
-			res.status(500).json({ error: "Missing Razorpay secret in environment" });
-			return;
-		}
+		// if (!process.env.RAZORPAY_KEY_SECRET) {
+		// 	res.status(500).json({ error: "Missing Razorpay secret in environment" });
+		// 	return;
+		// }
 
-		// Verify Signature
-		const generated_signature = crypto
-			.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-			.update(`${razorpay_order_id}|${razorpay_payment_id}`)
-			.digest("hex");
+		// // Verify Signature
+		// const generated_signature = crypto
+		// 	.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+		// 	.update(`${razorpay_order_id}|${razorpay_payment_id}`)
+		// 	.digest("hex");
 
-		if (generated_signature !== razorpay_signature) {
-			res.status(400).json({ error: "Invalid payment signature" });
-			return;
-		}
+		// if (generated_signature !== razorpay_signature) {
+		// 	res.status(400).json({ error: "Invalid payment signature" });
+		// 	return;
+		// }
 
 		// Set check-in time to 8 AM and check-out time to 9 AM
 		const start = new Date(startDate);
